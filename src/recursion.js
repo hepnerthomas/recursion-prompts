@@ -7,31 +7,90 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+
+  if (n < 0) {
+    return null;
+  }
+
+  if (n === 0) {
+    return 1;
+  }
+
+  return (n * factorial(n - 1));
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  var total = array[0];
+  if (array === undefined || array.length === 0) {
+    return 0;
+  } else {
+    total += sum(array.slice(1));
+  }
+  return total;
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  var result = 0;
+
+  if(!Array.isArray(array)) {
+    return array;
+  }
+  array.forEach(function(item) {
+    result += arraySum(item);
+  });
+
+  return result;
+
+
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  n = Math.abs(n);
+  if (n === 0) {
+    return true;
+  }
+  if (n === 1) {
+    return false;
+  }
+  return isEven(n - 2);
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
-};
+  var total = 0;
+  var sign = Math.sign(n);
+  n = Math.abs(n);
+  if (n < 1) {
+    return 0;
+  }
+  total = n - 1 + sumBelow(n - 1);
+  return sign * total;
+}
+;
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var result = [];
+  if (Math.abs(y - x) < 2) {
+    return result;
+  }
+
+  if (x < y) {
+    result.push(x + 1);
+    result = result.concat(range(x + 1, y));
+  } else {
+    result.push(x - 1);
+    result = result.concat(range(x - 1, y));
+  }
+  return result;
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +99,22 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  var total = base;
+  var sign = (exp < 0) ? -1 : 1;
+  exp *= sign;
+  if (exp === 0) {
+    return 1;
+  }
+  if (exp === 1) {
+    return base;
+  }
+  total *= exponent(base, exp - 1);
+  if (sign > 0) {
+    return total;
+  } else {
+    return 1 / total;
+  }
+
 };
 
 // 8. Determine if a number is a power of two.
@@ -47,15 +122,44 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  // var result = true;
+  if(n === 1) {
+    return true;
+  }
+  if (!Number.isInteger(n) || n === 0) {
+    return false;
+  }
+  return powerOfTwo(n / 2);
+  // return result;
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  var stringReversed = '';
+  var array = string.split('');
+  if (array.length === 0) {
+    return '';
+  }
+  stringReversed += array.slice(-1);
+  stringReversed += reverse(array.slice(0, -1).join(''));
+  return stringReversed;
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
-};
+  // remove non-alphanumeric characters and
+  // change the string to lowercase
+  var string = string.toLowerCase().replaceAll(' ', '');
+
+  // and get the length of the string
+  const len = string.length;
+
+  if (len <= 1) return true;
+  if (string[0] !== string[len - 1]) return false;
+
+  // proper tail call optimized recursion
+  return palindrome(string.slice(1, -1));
+}
 
 // 11. Write a function that returns the remainder of x divided by y without using the
 // modulo (%) operator.
@@ -185,7 +289,42 @@ var nestedEvenSum = function(obj) {
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
+
+  var result = [];
+
+  if (!Array.isArray(array)) {
+    return array;
+  }
+
+  array.forEach(function(item) {
+    result = result.concat(flatten(item));
+  });
+
+  return result;
 };
+
+
+  // // Create empty array for storing results
+  // var result = [];
+
+  // var innerFunction = function(input) {
+  //   if (!Array.isArray(input)) {
+  //     result.push(input);
+  //     return;
+  //   }
+
+  //   input.forEach(function(item) {
+  //     innerFunction(item);
+  //   });
+
+  // };
+  // innerFunction(array);
+
+
+  // // Return result array
+  // return result;
+
+
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
